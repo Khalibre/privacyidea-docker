@@ -11,14 +11,16 @@ handlers:
     formatter: detail
   file:
     # Rollover the logfile at midnight
-    class: logging.handlers.RotatingFileHandler
-    backupCount: 5
-    maxBytes: 1000000
-    formatter: detail
+    class: logging.handlers.TimedRotatingFileHandler
+    when: midnight
+    interval: 1
+    backupCount: 30
+    encoding: utf8
     level: INFO
+    formatter: detail
     filename: /var/log/privacyidea/privacyidea.log
 
 loggers:
   privacyidea:
     level: INFO
-    handlers: [file]
+    handlers: [console, file]
