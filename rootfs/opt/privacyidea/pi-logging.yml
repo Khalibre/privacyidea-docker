@@ -1,16 +1,20 @@
 version: 1
+
 formatters:
   detail:
     class: privacyidea.lib.log.SecureFormatter
     format: '[%(asctime)s][%(process)d][%(thread)d][%(levelname)s][%(name)s:%(lineno)d] %(message)s'
+
+  audit:
+    format: '%(message)s'
 
 handlers:
   console:
     class: logging.StreamHandler
     level: INFO
     formatter: detail
+
   file:
-    # Rollover the logfile at midnight
     class: logging.handlers.TimedRotatingFileHandler
     when: midnight
     interval: 1
@@ -20,7 +24,32 @@ handlers:
     formatter: detail
     filename: /var/log/privacyidea/privacyidea.log
 
+# Audit log handler
+  audit:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: audit
+    filename: /var/log/privacyidea/audit.log
+    maxBytes: 10000000
+    backupCount: 14
+    encoding: utf8
+
 loggers:
   privacyidea:
     level: INFO
     handlers: [console, file]
+    propagate: false
+
+  privacyidea.lib.audit:
+    level: INFO
+    handlers: [audit]
+    propagate: false
+
+  privacyidea.audit:
+    level: INFO
+    handlers: [audit]
+    propagate: false
+
+root:
+  level: INFO
+  handlers: [console]

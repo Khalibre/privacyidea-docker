@@ -21,9 +21,16 @@ SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True, "pool_recycle": 3600, "pool_
 PI_ENCFILE = os.environ.get("PI_ENCFILE", "/data/privacyidea/keys/encfile")
 PI_HSM = os.environ.get("PI_HSM", "default")
 PI_AUDIT_NO_SIGN = os.environ.get("PI_AUDIT_NO_SIGN", "False").lower() == "true"
-PI_AUDIT_MODULE = os.environ.get("", "privacyidea.lib.auditmodules.sqlaudit")
+PI_AUDIT_MODULE = os.environ.get("PI_AUDIT_MODULE", "privacyidea.lib.auditmodules.containeraudit")
+
+# Container Audit configuration which make audit log store on both database and locally.
+PI_AUDIT_CONTAINER_WRITE = [m.strip() for m in os.environ.get("PI_AUDIT_CONTAINER_WRITE","privacyidea.lib.auditmodules.sqlaudit,privacyidea.lib.auditmodules.loggeraudit").split(",") if m.strip()]
+PI_AUDIT_CONTAINER_READ = os.environ.get("PI_AUDIT_CONTAINER_READ", "privacyidea.lib.auditmodules.sqlaudit")
+PI_AUDIT_LOGGER_QUALNAME = os.environ.get("PI_AUDIT_LOGGER_QUALNAME", "privacyidea.audit")
+
 # PI_AUDIT_KEY_PRIVATE will be used only when PI_AUDIT_NO_SIGN is True
 PI_AUDIT_KEY_PRIVATE = os.environ.get("PI_AUDIT_KEY_PRIVATE_PATH", "/data/privacyidea/keys/private.pem")
+
 # PI_AUDIT_KEY_PUBLIC will be used only when PI_AUDIT_NO_SIGN is True
 PI_AUDIT_KEY_PUBLIC = os.environ.get("PI_AUDIT_KEY_PUBLIC_PATH", "/data/privacyidea/keys/public.pem")
 PI_AUDIT_POOL_SIZE = os.environ.get("PI_AUDIT_POOL_SIZE", 5)
